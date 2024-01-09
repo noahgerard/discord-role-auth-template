@@ -15,6 +15,8 @@ export default async function Home() {
             {session ? `Logged in as "${session.user.username}"` : ""}
           </p>
 
+          { session ? JSON.stringify(session, null, 2) : ""}
+
           {session ? <LogoutButton /> : <LoginButton />}
         </div>
 

@@ -11,27 +11,18 @@ datasource db {
 }
 
 model User {
-  id           String    @id @unique
+  id           String    @id @unique @default(cuid())
+  sessions     Session[] @relation("userSessions")
+
+  discord_id   String    @unique
   username     String
-  auth_session Session[]
-  key          Key[]
+  roles        String[]
 }
 
 model Session {
-  id             String @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  user           User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  id           String    @id @unique @default(cuid())
 
-  @@index([user_id])
-}
-
-model Key {
-  id              String  @id @unique
-  hashed_password String?
-  user_id         String
-  user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
+  user_id      String
+  user         User      @relation("userSessions", fields: [user_id], references: [id])
+  expires_at   DateTime
 }
