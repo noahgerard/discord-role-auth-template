@@ -1,4 +1,6 @@
+import useSWR from "swr"
 import { SessionOptions } from "iron-session";
+import crypto from "crypto";
 
 export interface SessionData {
   id: string;
@@ -9,7 +11,6 @@ export interface SessionData {
 
 export const defaultSession: SessionData = {
   id: "",
-  username: "",
   isLoggedIn: false,
   expiresAt: 0,
   roles: [],
@@ -26,5 +27,9 @@ export const sessionOptions: SessionOptions = {
 };
 
 export function generateExpiry() {
-  return Date.now() + 1000 * 60; // 1 minute
+  return Date.now() + 1000 * 60 * 60 * 24 * 7; // 7 days
+}
+
+export function generateId() {
+  return crypto.randomBytes(16).toString('hex');
 }

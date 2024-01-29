@@ -6,14 +6,13 @@ const LogoutButton = () => {
   const router = useRouter();
 
   const logout = async () => {
-    const response = await fetch("/api/logout", {
-      method: "POST",
+    console.log("logout");
+    const response = await fetch("/api/session/", {
+      method: "DELETE",
       redirect: "manual"
     });
 
     if (response.status === 0) {
-      // redirected
-      // when using `redirect: "manual"`, response status 0 is returned
       return router.refresh();
     }
   };
