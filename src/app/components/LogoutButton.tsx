@@ -9,10 +9,9 @@ const LogoutButton = () => {
     console.log("logout");
     const response = await fetch("/api/session/", {
       method: "DELETE",
-      redirect: "manual"
     });
 
-    if (response.status === 0) {
+    if (response.ok) {
       return router.refresh();
     }
   };

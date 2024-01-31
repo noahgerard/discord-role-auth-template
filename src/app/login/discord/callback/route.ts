@@ -28,9 +28,12 @@ export const GET = async (request: NextRequest) => {
 		const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
 		// Generate new session data
-		session.expiresAt = generateExpiry();
 		session.id = session.id || generateId();
+		session.username = member.user!.username;
+		session.roles = member.roles;
+		session.expiresAt = generateExpiry();
 		session.isLoggedIn = true;
+
 
 		// Session data structure for Prisma
 		const sessionCreate = {
@@ -48,11 +51,13 @@ export const GET = async (request: NextRequest) => {
 			where: { discord_id: member.user!.id },
 			update: {
 				username: member.user!.username,
+				roles: member.roles,
 				sessions: sessionCreate
 			},
 			create: {
 				discord_id: member.user!.id,
 				username: member.user!.username,
+				roles: member.roles,
 				sessions: sessionCreate
 			}
 		});

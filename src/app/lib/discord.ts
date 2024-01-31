@@ -1,5 +1,4 @@
 import DiscordOauth2, { TokenRequestResult } from 'discord-oauth2';
-import { roleConfig } from './roleConfig';
 
 export const scope = ["identify", "guilds.members.read"];
 
@@ -32,7 +31,7 @@ export async function getToken(code: string): Promise<TokenRequestResult> {
 }
 
 export async function getMember(access_token: string): Promise<DiscordOauth2.Member> {
-	const user = await oauth.getGuildMember(access_token, roleConfig.guildId);
+	const user = await oauth.getGuildMember(access_token, process.env.GUILD_ID as string);
 
 	return user;
 }

@@ -18,6 +18,7 @@ export async function GET(req: Request) {
 
 	// Update session data
 	session.roles = user?.roles || [];
+	session.username = user?.username || "";
 	session.save();
 
 	// If session has expired, return default session
