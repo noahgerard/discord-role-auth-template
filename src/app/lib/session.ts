@@ -1,4 +1,3 @@
-import useSWR from "swr"
 import { SessionOptions } from "iron-session";
 import crypto from "crypto";
 

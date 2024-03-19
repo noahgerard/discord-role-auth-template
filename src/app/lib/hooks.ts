@@ -1,16 +1,13 @@
-import { getIronSession } from "iron-session";
-import useSWR from "swr"
-import { sessionOptions } from "./session";
-import { useCookies } from 'next-client-cookies';
+"use client";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+import useSWR from "swr"
+import axios from "axios";
+import { SessionData, defaultSession, sessionOptions } from "./session";
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function useSession () {
-  const cookies = useCookies();
-  // @ts-ignore
-  const session = getIronSession(cookies, sessionOptions);
-
-  const { data = session, error, isLoading } = useSWR("/api/session/", fetcher, );
+  const { data, error, isLoading } = useSWR("/api/session/", fetcher);
  
   return {
     user: data,

@@ -8,7 +8,7 @@ import prismaClient from "@/lib/prisma";
 import { SessionData, defaultSession, sessionOptions } from "@/lib/session";
 
 // Get user session
-export async function GET(req: Request) {
+export async function GET() {
 	console.log("GET /api/user/");
 	const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
 	// Update session data
 	session.roles = user?.roles || [];
 	session.username = user?.username || "";
-	session.save();
+	await session.save();
 
 	// If session has expired, return default session
 	if (session.expiresAt < Date.now()) {
@@ -37,7 +37,7 @@ export async function GET(req: Request) {
 }
 
 // Delete user session/Logout
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE() {
 	console.log("DELETE /api/user/");
 	const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 	

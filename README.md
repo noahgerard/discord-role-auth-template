@@ -14,10 +14,13 @@ The discord bot will listen for discord role updates and update the database acc
 2. Find the `.env.example` file in the root directory
 3. Create a discord application [here](https://discord.com/developers/applications) and enable the `SERVER MEMBERS INTENT` in the bot section
 ![Alt text](docs/image.png)
-4. Rename the `.env.example` file to `.env` and modify the following variables
+4. Rename the `.env.example` file to `.env.local` and modify the following variables
 ```
+DATABASE_URL="postgresql://user:pass@address:port/dbname?schema=public"
+BOT_TOKEN="DISCORD BOT TOKEN"
+
 GUILD_ID="DISCORD GUILD ID"
-ROLE_ID="DISCORD ROLE
+NEXT_PUBLIC_ROLE_ID="DISCORD ROLE"
 
 CLIENT_ID="DISCORD CLIENT ID"
 CLIENT_SECRET="DISCORD CLIENT SECRET"

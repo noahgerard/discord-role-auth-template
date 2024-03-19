@@ -1,11 +1,12 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getIronSession } from "iron-session";
+import { IronSession, getIronSession } from "iron-session";
 
 import { SessionData, sessionOptions } from "@/lib/session";
+import axios from "axios";
+import { useSession } from "@/lib/hooks";
 
 // Broken: None of these parameters is working, thus we have caching issues
 // TODO fix this
@@ -15,36 +16,73 @@ export const revalidate = 0;
 async function getSession() {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
+  console.log("getSession", session);
+
   return session;
 }
 
 export default function ProtectedServer() {
   return (
-    <main className="space-y-5">
+    <div className="space-y-5">
       <title>Protected Page</title>
       <Suspense fallback={<p className="text-lg">Loading...</p>}>
         <Content />
       </Suspense>
-      <p>
-        <Link
-          href="/"
-        >
-          ← Back
-        </Link>
-      </p>
-    </main>
+      <Link href="/" className="text-blue-500" >
+        ← Back
+      </Link>
+    </div>
   );
 }
 
 async function Content() {
   const session = await getSession();
 
-  if (!session.isLoggedIn || !session.roles.includes(process.env.ROLE_ID as string)) {
-    return <Restricted />;
+  if (!session.isLoggedIn) {
+    return <></>
+  }
+
+  if (!session.roles.includes(process.env.ROLE_ID as string)) {
+    return (
+      <div className="flex flex-col gap-2">
+        <div>
+        <h3 className="text-bold">Your Roles</h3>
+        <ul>
+          {session.roles.map((role, i) => (
+            <li key={i}>{role}</li>
+          ))}
+        </ul>
+      </div>
+
+        <p>
+          You are not allowed to access this page.
+        </p>
+
+        <p>
+          Role needed to access protected page: <strong>{process.env.ROLE_ID}</strong>
+        </p>
+
+        <p>
+          Join the <Link href="/" className="text-blue-500">
+            test server
+          </Link> and assign yourself the role!
+        </p>
+
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-xl space-y-2">
+    <div className="flex flex-col max-w-xl gap-2">
+      <div>
+        <h3 className="text-bold">Your Roles</h3>
+        <ul>
+          {session.roles.map((role, i) => (
+            <li key={i}>{role}</li>
+          ))}
+        </ul>
+      </div>
+
       <p>
         Hello <strong>{session.username}!</strong>
       </p>
@@ -57,11 +95,11 @@ async function Content() {
   );
 }
 
-function Restricted() {
+function NotLoggedIn() {
   return (
-    <div className="max-w-xl space-y-2">
+    <div className="flex flex-col max-w-xl gap-2">
       <p>
-        You are not allowed to access this page.
+        You are not logged in.
       </p>
     </div>
   );

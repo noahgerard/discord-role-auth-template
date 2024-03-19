@@ -19,7 +19,7 @@ const Navbar = () => {
   }, [session]);
 
   return (
-    <div className='flex w-full items-center justify-between border-2'>
+    <div className='flex w-full items-center justify-between mb-2'>
       {session?.user?.isLoggedIn ?
         <div className='flex items-center gap-2'>
           {profile}
