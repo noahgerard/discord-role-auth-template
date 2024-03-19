@@ -7,11 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "bot:build": "tsc ./bot",
-    "bot:run": "node ./bot/dist/index.js"
+    "start-bot": "node ./bot/index.js"
   },
   "dependencies": {
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.11.0",
     "axios": "^1.6.3",
     "discord-oauth2": "^2.12.0",
     "discord.js": "^14.14.1",
@@ -27,7 +26,9 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "concurrently": "^8.2.2",
     "postcss": "^8",
+    "prisma": "^5.11.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

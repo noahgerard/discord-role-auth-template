@@ -29,11 +29,12 @@ export const GET = async (request: NextRequest) => {
 
 		// Generate new session data
 		session.id = session.id || generateId();
+		session.discordId = member.user!.id;
 		session.username = member.user!.username;
 		session.roles = member.roles;
 		session.expiresAt = generateExpiry();
 		session.isLoggedIn = true;
-
+		session.avatar = member.user!.avatar || null;
 
 		// Session data structure for Prisma
 		const sessionCreate = {

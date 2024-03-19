@@ -30,17 +30,25 @@ export async function GET(req: Request) {
 }
 
 // Logout
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, res: NextResponse) {
 	console.log("DELETE /api/user/");
-  const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
 	// Delete session from database
-	await prismaClient.session.delete({
-		where: { id: session.id }
-	});
+	try {
+		const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
-	// Destroy session
-  session.destroy();
+		console.log("Deleting session", session);
+
+		await prismaClient.session.delete({
+			where: { id: session.id }
+		});
+
+		// Destroy session
+		session.destroy();
+	} catch (error) {
+		console.error("Error deleting session", error);
+		return NextResponse.json({ error: "Error deleting session" }, { status: 500 });
+	}
 
 	return NextResponse.json(defaultSession);
 }

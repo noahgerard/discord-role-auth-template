@@ -12,7 +12,7 @@ const LogoutButton = () => {
     });
 
     if (response.ok) {
-      return router.refresh();
+      location.reload();
     }
   };
 

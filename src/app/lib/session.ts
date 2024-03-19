@@ -5,17 +5,21 @@ import crypto from "crypto";
 export interface SessionData {
   id: string;
   username: string;
+  discordId: string;
   isLoggedIn: boolean;
   expiresAt: number;
   roles: string[];
+  avatar: string | null;
 }
 
 export const defaultSession: SessionData = {
   id: "",
   username: "",
+  discordId: "",
   roles: [],
   isLoggedIn: false,
   expiresAt: 0,
+  avatar: null
 };
 
 export const sessionOptions: SessionOptions = {

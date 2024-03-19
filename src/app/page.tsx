@@ -10,18 +10,23 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="max-w-5xl w-full items-center justify-between font-mono text-sm">
-        <div className='ml-auto w-fit flex flex-row items-center'>
-          <p className='mx-2'>
-            { session?.user?.isLoggedIn ? `Logged in as "${session?.user?.username}"` : ""}
+      <div className="max-w-5xl w-full justify-between font-mono">
+        <div className='flex w-full justify-between'>
+          <p className='flex justify-center items-center'>
+            {session?.user?.isLoggedIn ?
+              <div className='flex items-center gap-2'>
+                { session?.user?.avatar ? <img src={`https://cdn.discordapp.com/avatars/${session?.user.discordId}/${session?.user?.avatar}.png`} alt="avatar" className="w-8 h-8 rounded-full" /> : "" }
+                { session?.user?.username }
+              </div>
+              : ""}
           </p>
 
-          { session?.user?.isLoggedIn ? JSON.stringify(session, null, 2) : ""}
-
-          { session?.user?.isLoggedIn ? <LogoutButton /> : <LoginButton />}
+          {session?.user?.isLoggedIn ? <LogoutButton /> : <LoginButton />}
         </div>
-
-        {/* <div className='w-full rounded-md border-[1px] p-2 mb-2 relative'>{JSON.stringify(session, null, 2)}</div> */}
+          
+        <div className='w-full rounded-md p-2 mb-2 relative' style={{ whiteSpace: 'pre-wrap' }}>
+          {session?.user?.isLoggedIn ? JSON.stringify(session, null, 2) : ""}
+        </div>
       </div>
     </main>
   )
