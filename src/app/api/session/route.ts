@@ -1,12 +1,13 @@
 "use server";
 
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from 'next/server';
+
 import prismaClient from "@/lib/prisma";
 import { SessionData, defaultSession, sessionOptions } from "@/lib/session";
-import { getIronSession } from "iron-session";
 
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from 'next/server'
-
+// Get user session
 export async function GET(req: Request) {
 	console.log("GET /api/user/");
 	const session = await getIronSession<SessionData>(cookies(), sessionOptions);
@@ -15,6 +16,12 @@ export async function GET(req: Request) {
 	const user = await prismaClient.user.findFirst({
 		where: { sessions: { some: { id: session.id } } },
 	});
+
+	// If user not found, destroy session and return default session
+	if (!user) {
+		session.destroy();
+		return NextResponse.json(defaultSession, { status: 401 });
+	}
 
 	// Update session data
 	session.roles = user?.roles || [];
@@ -29,16 +36,13 @@ export async function GET(req: Request) {
 	return NextResponse.json(session);
 }
 
-// Logout
+// Delete user session/Logout
 export async function DELETE(req: NextRequest, res: NextResponse) {
 	console.log("DELETE /api/user/");
-
+	const session = await getIronSession<SessionData>(cookies(), sessionOptions);
+	
 	// Delete session from database
 	try {
-		const session = await getIronSession<SessionData>(cookies(), sessionOptions);
-
-		console.log("Deleting session", session);
-
 		await prismaClient.session.delete({
 			where: { id: session.id }
 		});
